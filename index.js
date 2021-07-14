@@ -35,6 +35,11 @@ app.get(
   })
 );
 
+app.get("/farms/:id", async (req, res) => {
+  const farm = await Farm.findById(req.params.id);
+  res.render("farms/show", { farm });
+});
+
 app.get("/farms/new", (req, res) => {
   res.render("farms/new");
 });
@@ -143,6 +148,6 @@ app.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-app.listen(3000, () => {
-  console.log("App is listening on port 3000");
+app.listen(4000, () => {
+  console.log("App is listening on port 4000");
 });
