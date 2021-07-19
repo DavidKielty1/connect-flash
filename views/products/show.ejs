@@ -16,6 +16,9 @@
           ><%=product.category%></a
         >
       </li>
+      <li>
+        Farm: <a href="/farms/<%=product.farm.id%>"><%=product.farm.name%></a>
+      </li>
     </ul>
     <a href="/products/<%=product._id%>/edit">Edit</a>
     <a href="/products">Index</a>
