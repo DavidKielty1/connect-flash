@@ -4,12 +4,15 @@ const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const AppError = require("./AppError");
+const session = require('express-session')
+const sessionOptions = {secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false}
+const flash = require('connect-flash')
 
 const Product = require("./models/product");
 const Farm = require("./models/farm");
 
 mongoose
-  .connect("mongodb://localhost:27017/farmStandTake3", {
+  .connect("mongodb://localhost:27017/flashDemo", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -25,8 +28,16 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(session(sessionOptions))
+app.use(flash())
+
 
 // FARM ROUTES
+app.use((req, res, next) => {
+  res.locals.messages = req.flash('success')
+  next()
+})
+
 app.get(
   "/farms",
   wrapAsync(async (req, res, next) => {
@@ -58,6 +69,7 @@ app.post(
   wrapAsync(async (req, res, next) => {
     const farm = new Farm(req.body);
     await farm.save();
+    req.flash('success', 'Successfully made a new farm :)!')
     res.redirect("/farms");
   })
 );
